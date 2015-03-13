@@ -37,19 +37,31 @@ ContactManager.module "Entities", (Entities, ContactManager, Backbone, Marionett
 		contacts.forEach (contact) ->
 			contact.save()
 
-		return contacts
+		return contacts.models
 
 	API =
 		getContactEntities: ->
 			contacts = new (Entities.ContactCollection)
-			contacts.fetch()
-			if contacts.length is 0
-				return initializeContacts()
-			contacts
+			defer = $.Deferred()
+			contacts.fetch success: (data) ->
+				defer.resolve data
+			promise = defer.promise()
+			$.when(promise).done (contacts) ->
+				if contacts.length is 0
+					models = initializeContacts()
+					contacts.reset models
+
 		getContactEntity: (contactId) ->
 			contact = new (Entities.Contact)(id: contactId)
-			contact.fetch()
-			contact
+			defer = $.Deferred()
+			setTimeout (->
+				contact.fetch(
+					success: (data)->
+						defer.resolve(data)
+					error: (data)->
+						defer.resolve(undefined))
+				), 2000
+			return defer.promise()
 
 	ContactManager.reqres.setHandler 'contact:entities', ->
 		API.getContactEntities()

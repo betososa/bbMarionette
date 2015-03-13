@@ -34,25 +34,44 @@
       contacts.forEach(function(contact) {
         return contact.save();
       });
-      return contacts;
+      return contacts.models;
     };
     API = {
       getContactEntities: function() {
-        var contacts;
+        var contacts, defer, promise;
         contacts = new Entities.ContactCollection;
-        contacts.fetch();
-        if (contacts.length === 0) {
-          return initializeContacts();
-        }
-        return contacts;
+        defer = $.Deferred();
+        contacts.fetch({
+          success: function(data) {
+            return defer.resolve(data);
+          }
+        });
+        promise = defer.promise();
+        return $.when(promise).done(function(contacts) {
+          var models;
+          if (contacts.length === 0) {
+            models = initializeContacts();
+            return contacts.reset(models);
+          }
+        });
       },
       getContactEntity: function(contactId) {
-        var contact;
+        var contact, defer;
         contact = new Entities.Contact({
           id: contactId
         });
-        contact.fetch();
-        return contact;
+        defer = $.Deferred();
+        setTimeout((function() {
+          return contact.fetch({
+            success: function(data) {
+              return defer.resolve(data);
+            },
+            error: function(data) {
+              return defer.resolve(void 0);
+            }
+          });
+        }), 2000);
+        return defer.promise();
       }
     };
     ContactManager.reqres.setHandler('contact:entities', function() {

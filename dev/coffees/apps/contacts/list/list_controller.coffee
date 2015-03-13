@@ -1,12 +1,14 @@
 ContactManager.module "ContactsApp.List", (List, ContactManager, Backbone, Marionette, $, _)->
 	List.Controller = listContacts: ->
-		contacts        = ContactManager.request('contact:entities')
-		contactsListView = new (List.Contacts)(collection: contacts)
 
-		contactsListView.on 'childview:contact:delete', (childView, model) ->
-			model.destroy()
+		fetchingContacts = ContactManager.request('contact:entities')
+		$.when(fetchingContacts).done (contacts) ->
+			contactsListView = new (List.Contacts)(collection: contacts)
 
-		contactsListView.on 'childview:contact:show', (childView, model) ->
-			ContactManager.trigger "contact:show", model.get("id")
+			contactsListView.on 'childview:contact:delete', (childView, model) ->
+				model.destroy()
 
-		ContactManager.mainRegion.show contactsListView
+			contactsListView.on 'childview:contact:show', (childView, model) ->
+				ContactManager.trigger "contact:show", model.get("id")
+
+			ContactManager.mainRegion.show contactsListView
