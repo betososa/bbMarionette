@@ -1,14 +1,19 @@
 (function() {
   ContactManager.module("Entities", function(Entities, ContactManager, Backbone, Marionette, $, _) {
-    var API, contacts, initializeContacts;
-    Entities.Contact = Backbone.Model.extend({});
+    var API, initializeContacts;
+    Entities.Contact = Backbone.Model.extend({
+      urlRoot: "contacts"
+    });
+    Entities.configureStorage(Entities.Contact);
     Entities.ContactCollection = Backbone.Collection.extend({
+      url: "contacts",
       model: Entities.Contact,
       comparator: "firstName"
     });
-    contacts = void 0;
+    Entities.configureStorage(Entities.ContactCollection);
     initializeContacts = function() {
-      return contacts = new Entities.ContactCollection([
+      var contacts;
+      contacts = new Entities.ContactCollection([
         {
           id: 1,
           firstName: 'Alice',
@@ -26,17 +31,35 @@
           phoneNumber: '988254'
         }
       ]);
+      contacts.forEach(function(contact) {
+        return contact.save();
+      });
+      return contacts;
     };
     API = {
       getContactEntities: function() {
-        if (contacts === void 0) {
-          initializeContacts();
+        var contacts;
+        contacts = new Entities.ContactCollection;
+        contacts.fetch();
+        if (contacts.length === 0) {
+          return initializeContacts();
         }
         return contacts;
+      },
+      getContactEntity: function(contactId) {
+        var contact;
+        contact = new Entities.Contact({
+          id: contactId
+        });
+        contact.fetch();
+        return contact;
       }
     };
-    return ContactManager.reqres.setHandler('contact:entities', function() {
+    ContactManager.reqres.setHandler('contact:entities', function() {
       return API.getContactEntities();
+    });
+    return ContactManager.reqres.setHandler('contact:entity', function(id) {
+      return API.getContactEntity(id);
     });
   });
 

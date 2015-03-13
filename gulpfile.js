@@ -5,7 +5,7 @@ var srcFolder = 'src/assets/js/'
 // gulp.task('default', ['compile-coffee']);
 
 gulp.task('compile-coffee', function(){
-	gulp.src('dev/coffees/**/**/**/*.coffee')
+	gulp.src('dev/coffees/**/**/**/**/*.coffee')
 	.pipe(coffee())
 	.pipe(gulp.dest(srcFolder));
 });

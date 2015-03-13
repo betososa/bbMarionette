@@ -8,10 +8,10 @@
           collection: contacts
         });
         contactsListView.on('childview:contact:delete', function(childView, model) {
-          return contacts.remove(model);
+          return model.destroy();
         });
         contactsListView.on('childview:contact:show', function(childView, model) {
-          return ContactManager.ContactsApp.Show.Controller.showContact(model);
+          return ContactManager.trigger("contact:show", model.get("id"));
         });
         return ContactManager.mainRegion.show(contactsListView);
       }

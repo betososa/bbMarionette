@@ -1,11 +1,17 @@
-ContactManager.module "Entities",(Entities, ContactManager, Backbone, Marionette, $, _)->
-	Entities.Contact = Backbone.Model.extend({})
+ContactManager.module "Entities", (Entities, ContactManager, Backbone, Marionette, $, _)->
+
+	Entities.Contact = Backbone.Model.extend (urlRoot:"contacts")
+
+	Entities.configureStorage Entities.Contact
 
 	Entities.ContactCollection = Backbone.Collection.extend(
+		url        : "contacts"
 		model      : Entities.Contact
 		comparator : "firstName")
 
-	contacts = undefined
+	Entities.configureStorage Entities.ContactCollection
+
+	# contacts = undefined
 
 	initializeContacts = ->
 		contacts = new (Entities.ContactCollection)([
@@ -28,11 +34,25 @@ ContactManager.module "Entities",(Entities, ContactManager, Backbone, Marionette
 				phoneNumber : '988254'
 			}
 		])
+		contacts.forEach (contact) ->
+			contact.save()
 
-	API = getContactEntities: ->
-		if contacts is undefined
-			initializeContacts()
-		contacts
+		return contacts
+
+	API =
+		getContactEntities: ->
+			contacts = new (Entities.ContactCollection)
+			contacts.fetch()
+			if contacts.length is 0
+				return initializeContacts()
+			contacts
+		getContactEntity: (contactId) ->
+			contact = new (Entities.Contact)(id: contactId)
+			contact.fetch()
+			contact
 
 	ContactManager.reqres.setHandler 'contact:entities', ->
 		API.getContactEntities()
+
+	ContactManager.reqres.setHandler 'contact:entity',(id) ->
+		API.getContactEntity(id)
