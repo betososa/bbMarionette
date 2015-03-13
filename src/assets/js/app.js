@@ -7,9 +7,22 @@
     mainRegion: "#main-region"
   });
 
+  ContactManager.navigate = function(route, options) {
+    options || (options = {});
+    return Backbone.history.navigate(route, options);
+  };
+
+  ContactManager.getCurrentRoute = function() {
+    return Backbone.history.fragment;
+  };
+
   ContactManager.on("start", function() {
-    ContactManager.ContactsApp.List.Controller.listContacts();
-    return alert(JSON.stringify(ContactManager.request("contact:entities")));
+    if (Backbone.history) {
+      Backbone.history.start();
+      if (this.getCurrentRoute() === '') {
+        return ContactManager.trigger("contacts:list");
+      }
+    }
   });
 
   window.ContactManager = ContactManager;

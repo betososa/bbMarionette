@@ -6,6 +6,11 @@ ContactManager.module "ContactsApp.List", (List, ContactManager, Backbone, Mario
 		events:
 			"click"                  : "highlightName"
 			"click button.js-delete" : "deleteButton"
+			"click td a.js-show"     : "showClicked"
+		showClicked: (e)->
+			e.preventDefault()
+			e.stopPropagation()
+			@trigger "contact:show", @model
 		highlightName: (e)->
 			e.preventDefault()
 			@$el.toggleClass "success"
@@ -19,8 +24,12 @@ ContactManager.module "ContactsApp.List", (List, ContactManager, Backbone, Mario
 
 	)
 	List.Contacts = Marionette.CompositeView.extend(
-		tagName   : 'table'
-		className : 'table table-hover'
-		template  : "#contact-list"
-		childView : List.Contact
-		childViewContainer : "tbody")
+		tagName                 : 'table'
+		className               : 'table table-hover'
+		template                : "#contact-list"
+		childView               : List.Contact
+		childViewContainer      : "tbody"
+		onChildviewContactDelete : ->
+			@$el.fadeOut 1000, ->
+				$(this).fadeIn 1000
+	)

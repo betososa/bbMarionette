@@ -5,7 +5,13 @@
       template: '#contact-list-item',
       events: {
         "click": "highlightName",
-        "click button.js-delete": "deleteButton"
+        "click button.js-delete": "deleteButton",
+        "click td a.js-show": "showClicked"
+      },
+      showClicked: function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        return this.trigger("contact:show", this.model);
       },
       highlightName: function(e) {
         e.preventDefault();
@@ -28,7 +34,12 @@
       className: 'table table-hover',
       template: "#contact-list",
       childView: List.Contact,
-      childViewContainer: "tbody"
+      childViewContainer: "tbody",
+      onChildviewContactDelete: function() {
+        return this.$el.fadeOut(1000, function() {
+          return $(this).fadeIn(1000);
+        });
+      }
     });
   });
 

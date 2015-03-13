@@ -2,8 +2,18 @@ ContactManager = new Marionette.Application()
 
 ContactManager.addRegions mainRegion : "#main-region"
 
+ContactManager.navigate = (route, options)->
+	options or (options = {})
+	Backbone.history.navigate route, options
+
+ContactManager.getCurrentRoute = ->
+	Backbone.history.fragment
+
 ContactManager.on "start", ->
-	ContactManager.ContactsApp.List.Controller.listContacts()
-	alert JSON.stringify ContactManager.request("contact:entities")
+	if Backbone.history
+		Backbone.history.start()
+		if @getCurrentRoute() is ''
+			ContactManager.trigger "contacts:list"
+			# ContactManager.ContactsApp.List.Controller.listContacts()
 
 window.ContactManager = ContactManager
