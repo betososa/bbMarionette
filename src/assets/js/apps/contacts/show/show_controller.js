@@ -2,7 +2,9 @@
   ContactManager.module("ContactsApp.Show", function(Show, ContactManager, Backbone, Marionette, $, _) {
     return Show.Controller = {
       showContact: function(id) {
-        var fetchingContact;
+        var fetchingContact, loadingView;
+        loadingView = new ContactManager.Common.Views.Loading;
+        ContactManager.mainRegion.show(loadingView);
         fetchingContact = ContactManager.request("contact:entity", id);
         return $.when(fetchingContact).done(function(contact) {
           var contactView;
