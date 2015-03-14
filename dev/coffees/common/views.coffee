@@ -1,6 +1,19 @@
 ContactManager.module "Common.Views", (Views, ContactManager, Backbone, Marionette, $, _)->
 	Views.Loading = Marionette.ItemView.extend(
+
 		template: "#loading-view"
+
+		initialize: (options)->
+			options  = options         or {}
+			@title   = options.title   or "Loading data..."
+			@message = options.message or "Please wait data is loading"
+		
+		serializeData: ->
+			{
+				title   : @title
+				message : @message
+			}
+		
 		onShow: ->
 			opts =
 				lines:13

@@ -1,6 +1,8 @@
 ContactManager.module "ContactsApp.List", (List, ContactManager, Backbone, Marionette, $, _)->
 	List.Controller = listContacts: ->
 
+		loadingView = new (ContactManager.Common.Views.Loading)
+		ContactManager.mainRegion.show(loadingView)
 		fetchingContacts = ContactManager.request('contact:entities')
 		$.when(fetchingContacts).done (contacts) ->
 			contactsListView = new (List.Contacts)(collection: contacts)
