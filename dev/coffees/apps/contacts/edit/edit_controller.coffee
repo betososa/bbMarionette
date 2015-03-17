@@ -9,6 +9,12 @@ ContactManager.module 'ContactsApp.Edit', (Edit, ContactManager, Backbone, Mario
 			view = undefined
 			if contact isnt undefined
 				view = new (Edit.Contact)(model:contact)
+				view.on "form:submit", (data)->
+					if contact.save data
+						ContactManager.trigger "contact:show", contact.get "id"
+					else
+						view.triggerMethod "form:data:invalid", contact.validationError
+					
 			else
 				view = new (ContactManager.ContactsApp.Show.MissingContact)
 			ContactManager.mainRegion.show view

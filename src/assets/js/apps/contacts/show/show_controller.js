@@ -13,6 +13,9 @@
             contactView = new Show.Contact({
               model: contact
             });
+            contactView.on("contact:edit", function(contact) {
+              return ContactManager.trigger("contact:edit", contact.get("id"));
+            });
           } else {
             contactView = new Show.MissingContact;
           }

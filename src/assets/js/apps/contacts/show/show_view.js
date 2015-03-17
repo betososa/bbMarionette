@@ -4,7 +4,14 @@
       template: '#missing-contact-view'
     });
     Show.Contact = Marionette.ItemView.extend({
-      template: "#contact-view"
+      template: "#contact-view",
+      events: {
+        "click a.js-edit": "editClicked"
+      },
+      editClicked: function(e) {
+        e.preventDefault();
+        return this.trigger("contact:edit", this.model);
+      }
     });
     return Show.InvalidId = Marionette.ItemView.extend({
       template: "#invalid-id"

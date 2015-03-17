@@ -1,6 +1,18 @@
 ContactManager.module "Entities", (Entities, ContactManager, Backbone, Marionette, $, _)->
 
-	Entities.Contact = Backbone.Model.extend (urlRoot:"contacts")
+	Entities.Contact = Backbone.Model.extend (
+		urlRoot:"contacts"
+		validate: (attrs, options)->
+			errors = {}
+			if not attrs.firstName
+				errors.firstName = "cant be blank"
+			if not attrs.lastName
+				errors.lastName = "cant be blank"
+			else
+				if attrs.lastName.length < 2
+					errors.lastName = "is too short"
+			if not _.isEmpty(errors)
+				return errors)
 
 	Entities.configureStorage Entities.Contact
 

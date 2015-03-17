@@ -7,6 +7,8 @@ ContactManager.module "ContactsApp.Show", (Show, ContactManager, Backbone, Mario
 			contactView = undefined
 			if contact isnt undefined
 				contactView = new (Show.Contact)(model:contact)
+				contactView.on "contact:edit", (contact)->
+					ContactManager.trigger "contact:edit", contact.get "id"
 			else
 				contactView = new (Show.MissingContact)
 
