@@ -2,12 +2,15 @@ ContactManager.module "ContactsApp", (ContactsApp, ContactManager, Backbone, Mar
 	ContactsApp.Router = Marionette.AppRouter.extend(
 		appRoutes:
 			"contacts"     : "listContacts"
-			"contacts/:id" : "showContact")
+			"contacts/:id" : "showContact"
+			"contacts/:id/edit" : "editContact")
 	API =
 		listContacts: ->
 			ContactsApp.List.Controller.listContacts()
 		showContact:(id)->
 			ContactsApp.Show.Controller.showContact(id)
+		editContact: (id)->
+			ContactsApp.Edit.Controller.editContact(id)
 
 	ContactManager.on 'contacts:list', ->
 		ContactManager.navigate 'contacts'
@@ -17,6 +20,10 @@ ContactManager.module "ContactsApp", (ContactsApp, ContactManager, Backbone, Mar
 		ContactManager.navigate "contacts/#{id}"
 		API.showContact id
 
+	ContactManager.on 'contact:edit', (id)->
+		ContactManager.navigate "contacts/#{id}/edit"
+		API.editContact(id)
+
 
 	ContactManager.addInitializer ->
-		new (ContactsApp.Router)(controller: API)
+		new (ContactsApp.Router)(controller: API) 
