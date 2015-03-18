@@ -7,6 +7,13 @@ ContactManager.module "ContactsApp.List", (List, ContactManager, Backbone, Mario
 			"click"                  : "highlightName"
 			"click button.js-delete" : "deleteButton"
 			"click td a.js-show"     : "showClicked"
+			"click td a.js-edit"     : "editClicked"
+		flash : (cssClass)->
+			$view = @$el
+			$view.hide().toggleClass(cssClass).fadeIn 800, ->
+				setTimeout (->
+					$view.toggleClass cssClass
+				), 500
 		showClicked: (e)->
 			e.preventDefault()
 			e.stopPropagation()
@@ -14,6 +21,10 @@ ContactManager.module "ContactsApp.List", (List, ContactManager, Backbone, Mario
 		highlightName: (e)->
 			e.preventDefault()
 			@$el.toggleClass "success"
+		editClicked: (e)->
+			e.preventDefault()
+			e.stopPropagation()
+			@trigger "contact:edit", @model
 		deleteButton: (e)->
 			e.stopPropagation()
 			@trigger "contact:delete", @model

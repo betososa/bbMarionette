@@ -1,6 +1,9 @@
 ContactManager.module "ContactsApp.Edit", (Edit, ContactManager, Backbone, Marionette, $, _) ->
 	Edit.Contact = Marionette.ItemView.extend(
 		template: "#contact-form"
+		initialize: ->
+			@title = "Edit " + @model.get "firstName"
+			@title += " " + @model.get "lastName"
 		events:
 			"click button.js-submit" : "submitClicked"
 		submitClicked:(e)->
@@ -8,6 +11,19 @@ ContactManager.module "ContactsApp.Edit", (Edit, ContactManager, Backbone, Mario
 			console.log "Edit contact"
 			data = Backbone.Syphon.serialize @
 			@trigger "form:submit", data
+
+		onRender: ->
+			if not @options.asModal
+				$title = $("<h1>",text:@title)
+				@$el.prepend($title)
+
+		onShow: ->
+			if @options.asModal
+				@$el.dialog(
+					modal:true
+					title:@title
+					width:"auto")
+
 		onFormDataInvalid: (errors)->
 			$view = @$el
 			# self = @

@@ -1,6 +1,8 @@
 ContactManager = new Marionette.Application()
 
-ContactManager.addRegions mainRegion : "#main-region"
+ContactManager.addRegions(
+	mainRegion   : "#main-region"
+	dialogRegion : "#dialog-region")
 
 ContactManager.navigate = (route, options)->
 	options or (options = {})

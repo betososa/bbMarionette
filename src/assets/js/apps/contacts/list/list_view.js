@@ -6,7 +6,17 @@
       events: {
         "click": "highlightName",
         "click button.js-delete": "deleteButton",
-        "click td a.js-show": "showClicked"
+        "click td a.js-show": "showClicked",
+        "click td a.js-edit": "editClicked"
+      },
+      flash: function(cssClass) {
+        var $view;
+        $view = this.$el;
+        return $view.hide().toggleClass(cssClass).fadeIn(800, function() {
+          return setTimeout((function() {
+            return $view.toggleClass(cssClass);
+          }), 500);
+        });
       },
       showClicked: function(e) {
         e.preventDefault();
@@ -16,6 +26,11 @@
       highlightName: function(e) {
         e.preventDefault();
         return this.$el.toggleClass("success");
+      },
+      editClicked: function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        return this.trigger("contact:edit", this.model);
       },
       deleteButton: function(e) {
         e.stopPropagation();
