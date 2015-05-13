@@ -2,8 +2,6 @@ var srcFolder = 'src/assets/js/'
 	, gulp   = require('gulp')
 	, coffee = require('gulp-coffee');
 
-// gulp.task('default', ['compile-coffee']);
-
 gulp.task('compile-coffee', function(){
 	gulp.src('dev/coffees/**/**/**/**/*.coffee')
 	.pipe(coffee())

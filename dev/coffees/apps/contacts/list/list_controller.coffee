@@ -7,6 +7,7 @@ ContactManager.module "ContactsApp.List", (List, ContactManager, Backbone, Mario
     fetchingContacts = ContactManager.request('contact:entities')
     contactsListLayout = new (List.Layout)
     contactsListPanel  = new (List.Panel)
+
     $.when(fetchingContacts).done (contacts) ->
       contactsListView = new (List.Contacts)(collection: contacts)
       contactsListLayout.on "show", ->
@@ -18,6 +19,7 @@ ContactManager.module "ContactsApp.List", (List, ContactManager, Backbone, Mario
         view = new (ContactManager.ContactsApp.New.Contact)(
           model:newContact
           asModal:true)
+
         view.on 'form:submit', (data)->
           if contacts.length > 0
             highestId = contacts.max((c)->
